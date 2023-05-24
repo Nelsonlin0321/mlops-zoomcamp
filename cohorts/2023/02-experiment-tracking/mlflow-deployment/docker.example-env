@@ -1,0 +1,7 @@
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+MLFLOW_S3_ENDPOINT_URL=s3.us-east-1.amazonaws.com
+MLFLOW_S3_IGNORE_TLS=true
+MLFLOW_TRACKING_URI=postgresql+psycopg2://<username>:<password>@<host>/mlflow
+MLFLOW_BACKEND_STORE_URI=${MLFLOW_TRACKING_URI}
+PORT=5555
