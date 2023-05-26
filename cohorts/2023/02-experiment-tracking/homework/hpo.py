@@ -38,7 +38,7 @@ def run_optimization(data_path: str, num_trials: int):
 
             mlflow.set_tag("developer", "nelsonlin")
             mlflow.set_tag("model", "RandomForest")
-            
+
             params = {
                 'n_estimators': trial.suggest_int('n_estimators', 10, 50, 1),
                 'max_depth': trial.suggest_int('max_depth', 1, 20, 1),
@@ -48,6 +48,7 @@ def run_optimization(data_path: str, num_trials: int):
                 'n_jobs': -1
             }
 
+            mlflow.log_params(params)
             rf = RandomForestRegressor(**params)
             rf.fit(X_train, y_train)
             y_pred = rf.predict(X_val)

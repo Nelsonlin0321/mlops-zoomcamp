@@ -12,7 +12,9 @@ HPO_EXPERIMENT_NAME = "random-forest-hyperopt"
 EXPERIMENT_NAME = "random-forest-best-models"
 RF_PARAMS = ['max_depth', 'n_estimators', 'min_samples_split', 'min_samples_leaf', 'random_state', 'n_jobs']
 
-mlflow.set_tracking_uri("http://127.0.0.1:5000")
+# mlflow.set_tracking_uri("http://127.0.0.1:5000")
+TRACKING_URL = "http://ec2-18-142-183-214.ap-southeast-1.compute.amazonaws.com:5050"
+mlflow.set_tracking_uri(TRACKING_URL)
 mlflow.set_experiment(EXPERIMENT_NAME)
 mlflow.sklearn.autolog()
 
@@ -66,14 +68,18 @@ def run_register_model(data_path: str, top_n: int):
         order_by=["metrics.rmse ASC"]
     )
     for run in runs:
-        train_and_log_model(data_path=data_path, params=run.data.params)
+        if run.data.params:
+            train_and_log_model(data_path=data_path, params=run.data.params)
 
     # Select the model with the lowest test RMSE
     experiment = client.get_experiment_by_name(EXPERIMENT_NAME)
-    # best_run = client.search_runs( ...  )[0]
 
-    # Register the best model
-    # mlflow.register_model( ... )
+    # register best model
+    best_run = client.search_runs(experiment_ids=experiment.experiment_id,
+                                            order_by=["metrics.rmse ASC"],max_results=1)[0]
+    run_id = best_run.info.run_id
+    model_uri = f"runs:/{run_id}/model"
+    mlflow.register_model(model_uri=model_uri, name="green-taxi-tip-amount-best-model")
 
 
 if __name__ == '__main__':
