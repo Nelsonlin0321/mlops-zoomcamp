@@ -8,7 +8,7 @@ from mlflow.tracking import MlflowClient
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 
-HPO_EXPERIMENT_NAME = "random-forest-hyperopt"
+HPO_EXPERIMENT_NAME = "random-forest-hyperopt-v2"
 EXPERIMENT_NAME = "random-forest-best-models"
 RF_PARAMS = ['max_depth', 'n_estimators', 'min_samples_split', 'min_samples_leaf', 'random_state', 'n_jobs']
 
@@ -76,7 +76,7 @@ def run_register_model(data_path: str, top_n: int):
 
     # register best model
     best_run = client.search_runs(experiment_ids=experiment.experiment_id,
-                                            order_by=["metrics.rmse ASC"],max_results=1)[0]
+                                            order_by=["metrics.test_rmse ASC"],max_results=1)[0]
     run_id = best_run.info.run_id
     model_uri = f"runs:/{run_id}/model"
     mlflow.register_model(model_uri=model_uri, name="green-taxi-tip-amount-best-model")
