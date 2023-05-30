@@ -21,3 +21,5 @@ __pycache__/
 
 
 .DS_Store
+cohorts/2023/02-experiment-tracking/homework-wandb/wandb/
+*.pkl

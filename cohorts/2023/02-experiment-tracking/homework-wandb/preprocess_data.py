@@ -44,6 +44,7 @@ def preprocess(df: pd.DataFrame, dv: DictVectorizer, fit_dv: bool = False):
 @click.option(
     "--raw_data_path", help="Location where the raw NYC taxi trip data was saved"
 )
+
 @click.option("--dest_path", help="Location where the resulting files will be saved")
 def run_data_prep(
     wandb_project: str,
