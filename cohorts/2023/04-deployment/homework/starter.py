@@ -1,9 +1,28 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+get_ipython().system('pip freeze | grep scikit-learn')
+
+
+# In[2]:
+
+
 import pickle
 import pandas as pd
-import sys
+import numpy as np
+
+
+# In[3]:
+
 
 with open('model.bin', 'rb') as f_in:
     dv, model = pickle.load(f_in)
+
+
+# In[4]:
 
 
 categorical = ['PULocationID', 'DOLocationID']
@@ -20,34 +39,89 @@ def read_data(filename):
     
     return df
 
-def get_path(year,month):
-    return f'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{year:04d}-{month:02d}.parquet'
+
+# In[5]:
 
 
-def make_prediction_and_save(df,year,month):
-    dicts = df[categorical].to_dict(orient='records')
-    X_val = dv.transform(dicts)
-    y_pred = model.predict(X_val)
-
-    df['ride_id'] = f'{year:04d}/{month:02d}_' + df.index.astype('str')
-
-    df['predicted_duration']=y_pred
-
-    df_output = df[['ride_id','predicted_duration']]
-    df_output.to_parquet(
-        f"yellow_tripdata_{year:04d}-{month:02d}_duration_prediction.parquet",
-        engine='pyarrow',
-        compression=None,
-        index=False
-    )
-
-def run():
-    year = int(sys.argv[1]) # 2022
-    month = int(sys.argv[2]) # 2
-    file_path = get_path(year,month)
-    df = read_data(filename=file_path)
-    make_prediction_and_save(df,year,month)
+year = 2022
+month = 2
 
 
-if __name__ == '__main__':
-    run()
+# In[6]:
+
+
+df = read_data(f'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{year:04d}-{month:02d}.parquet')
+
+
+# In[7]:
+
+
+dicts = df[categorical].to_dict(orient='records')
+X_val = dv.transform(dicts)
+y_pred = model.predict(X_val)
+
+
+# In[8]:
+
+
+np.std(y_pred)
+
+
+# In[9]:
+
+
+df['ride_id'] = f'{year:04d}/{month:02d}_' + df.index.astype('str')
+
+
+# In[10]:
+
+
+df['predicted_duration']=y_pred
+
+
+# In[11]:
+
+
+df_output = df[['ride_id','predicted_duration']]
+
+
+# In[12]:
+
+
+df_output.head()
+
+
+# In[13]:
+
+
+df_output.to_parquet(
+    f"yellow_tripdata_{year:04d}-{month:02d}_duration_prediction.parquet",
+    engine='pyarrow',
+    compression=None,
+    index=False
+)
+
+
+# In[16]:
+
+
+df = pd.read_parquet("yellow_tripdata_2022-03_duration_prediction.parquet")
+
+
+# In[17]:
+
+
+df.head()
+
+
+# In[18]:
+
+
+np.mean(df['predicted_duration'])
+
+
+# In[ ]:
+
+
+
+

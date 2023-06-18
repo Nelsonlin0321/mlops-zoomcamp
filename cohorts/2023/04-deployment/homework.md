@@ -61,7 +61,7 @@ Now let's turn the notebook into a script.
 Which command you need to execute for that?
 
 ```bash
-python starter.py 2022 2
+jupyter nbconvert --to script starter.ipynb
 ```
 
 
