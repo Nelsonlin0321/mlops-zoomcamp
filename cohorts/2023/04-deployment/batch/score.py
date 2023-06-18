@@ -17,9 +17,12 @@ from sklearn.metrics import mean_squared_error
 from sklearn.pipeline import make_pipeline
 import boto3
 
+import dotenv
+dotenv.load_dotenv(".env")
+
 logged_model  = "s3://s3-mlflow-artifacts-storage/mlflow/12/{RUN_ID}/artifacts/model"
 bucket_name = 'nyc-duration-prediction'
-run_id='cc36795ca2fd48e8a176194f450c0ade'
+# run_id='cc36795ca2fd48e8a176194f450c0ade'
 
 def get_paths(run_date, taxi_type, run_id):
     prev_month = run_date - relativedelta(months=1)
@@ -85,8 +88,40 @@ def save_results(df, y_pred, run_id, output_file):
 
 
 
-@task(log_prints=True)
-def apply_model(input_file, run_id, output_file):
+# @flow(log_prints=True)
+# def apply_model(input_file, run_id, output_file):
+#     logger = get_run_logger()
+
+#     logger.info(f'reading the data from {input_file}...')
+#     df = preprocess_dataframe(input_file)
+#     dicts = prepare_dictionaries(df)
+
+#     logger.info(f'loading the model with RUN_ID={run_id}...')
+#     model = load_model(run_id)
+
+#     logger.info(f'applying the model...')
+#     y_pred = make_prediction(model,dicts)
+
+#     logger.info(f'saving the result to {output_file}...')
+
+#     save_results(df, y_pred, run_id, output_file)
+
+#     upload_file_to_s3(output_file,bucket_name,output_file)
+
+#     return output_file
+
+@flow(log_prints=True)
+def ride_duration_prediction(
+        taxi_type: str,
+        run_id: str,
+        run_date: datetime = None):
+    
+    if run_date is None:
+        ctx = get_run_context()
+        run_date = ctx.flow_run.expected_start_time
+    
+    input_file, output_file = get_paths(run_date, taxi_type, run_id)
+
     logger = get_run_logger()
 
     logger.info(f'reading the data from {input_file}...')
@@ -105,33 +140,11 @@ def apply_model(input_file, run_id, output_file):
 
     upload_file_to_s3(output_file,bucket_name,output_file)
 
-    return output_file
-
-
-@flow
-def ride_duration_prediction(
-        taxi_type: str,
-        run_id: str,
-        run_date: datetime = None):
-    
-    if run_date is None:
-        ctx = get_run_context()
-        run_date = ctx.flow_run.expected_start_time
-    
-    input_file, output_file = get_paths(run_date, taxi_type, run_id)
-
-    apply_model(
-        input_file=input_file,
-        run_id=run_id,
-        output_file=output_file
-    )
-
-
 def run():
     taxi_type = sys.argv[1] # 'green'
     year = int(sys.argv[2]) # 2021
     month = int(sys.argv[3]) # 3
-    # run_id = sys.argv[4] # 'cc36795ca2fd48e8a176194f450c0ade'
+    run_id = sys.argv[4] # 'cc36795ca2fd48e8a176194f450c0ade'
 
     ride_duration_prediction(
         taxi_type=taxi_type,
