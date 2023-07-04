@@ -10,7 +10,7 @@ Start with `baseline_model_nyc_taxi_data.ipynb`. Download the March 2023 Green T
 
 What is the shape of the downloaded data? How many rows are there?
 
-* 72044
+* 72044 <-
 * 78537 
 * 62495
 * 54396
@@ -24,7 +24,7 @@ Hint: explore evidently metric `ColumnQuantileMetric` (from `evidently.metrics i
 
 What metric did you choose?
 
-
+QuantileMetric <-
 
 ## Q3. Prefect flow 
 
@@ -37,7 +37,7 @@ What is the correct way of doing that?
 * `@task(retries_num=2, retry_seconds=5, task_name="calculate metrics")`
 * `@task(retries_num=2, retry_delay_seconds=5, name="calculate metrics")`
 * `@task(retries=2, retry_seconds=5, task_name="calculate metrics")`
-* `@task(retries=2, retry_delay_seconds=5, name="calculate metrics")`
+* `@task(retries=2, retry_delay_seconds=5, name="calculate metrics")` <-
 
 
 
@@ -49,7 +49,7 @@ What is the maximum value of metric `quantile = 0.5` on th `"fare_amount"` colum
 
 * 10
 * 12.5
-* 14
+* 14 <-
 * 14.8
 
 
@@ -62,7 +62,7 @@ Where to place a dashboard config file?
 
 * `project_folder` (05-monitoring)
 * `project_folder/config`  (05-monitoring/config)
-* `project_folder/dashboards`  (05-monitoring/dashboards)
+* `project_folder/dashboards`  (05-monitoring/dashboards) <-
 * `project_folder/data`  (05-monitoring/data)
 
 
