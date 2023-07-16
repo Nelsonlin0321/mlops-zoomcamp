@@ -21,6 +21,10 @@ Now we need to create the "main" block from which we'll invoke
 the main function. How does the `if` statement that we use for
 this looks like? 
 
+```python
+if __name__=='__main__':
+    main()
+```
 
 Hint: after refactoring, check that the code still works. Just run
 it e.g. for Feb 2022 and see if it finishes successfully. 
@@ -48,7 +52,7 @@ The second file will be `__init__.py`. So, why do we need this second file?
 
 - To define a package and specify its boundaries
 - To manage the import of modules from the package 
-- Both of the above options are correct
+- Both of the above options are correct <-
 - To initialize a new object
 
 
@@ -104,7 +108,7 @@ How many rows should be there in the expected dataframe?
 
 - 1
 - 2
-- 3
+- 3 <-
 - 4
 
 
@@ -134,7 +138,7 @@ aws s3 ls
 
 In both cases we should adjust commands for localstack. Which option do we need to use for such purposes?
 
-- `--endpoint-url`
+- `--endpoint-url` <-
 - `--profile`
 - `--region`
 - `--version`
@@ -228,7 +232,7 @@ df_input.to_parquet(
 
 What's the size of the file?
 
-- 3667
+- 3667 <-
 - 23667
 - 43667
 - 63667
@@ -259,7 +263,7 @@ verify the result is correct.
 
 What's the sum of predicted durations for the test dataframe?
 
-- 10.50
+- 10.50 <-
 - 31.51
 - 59.28
 - 81.22
